@@ -24,23 +24,20 @@ jobs:
       - name: Check out branch
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
         with:
-          repository: ${{ github.repository }}
-          fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 0 }}
+          persist-credentials: false
+          fetch-depth: 0
 
       - name: Check changed files for workflow changes
         id: changed-workflow-files
         uses: step-security/changed-files@95b56dadb92a30ca9036f16423fd3c088a71ee94 # v46.0.5
         with:
           files: |
-            ".github/workflows/**.yml"
-            ".github/workflows/**.yaml"
+            .github/workflows/**.yml
+            .github/workflows/**.yaml
 
       - name: Run zizmor
         if: steps.changed-workflow-files.outputs.any_changed == 'true'
         uses: zizmorcore/zizmor-action@5ca5fc7a4779c5263a3ffa0e1f693009994446d1 # v0.1.2
-        env:
-          ALL_CHANGED_FILES: ${{ steps.changed-workflow-files.outputs.all_changed_files }}
-          USE_ADVANCED_SECURITY: ${{ github.event.repository.private == false }}
         with:
-          advanced-security: ${USE_ADVANCED_SECURITY}
-          inputs: ${ALL_CHANGED_FILES}
+          advanced-security: ${{ github.event.repository.private == false }}
+          inputs: ${{ steps.changed-workflow-files.outputs.all_changed_files }}
