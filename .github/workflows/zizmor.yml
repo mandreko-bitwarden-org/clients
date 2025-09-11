@@ -18,8 +18,8 @@ jobs:
     permissions:
       contents: read
       pull-requests: read
-      security-events: write # Only needed for private repositories
-      actions: read # Only needed for private repositories
+      #security-events: write # Only needed for private repositories
+      #actions: read # Only needed for private repositories
     steps:
       - name: Check out branch
         uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
@@ -39,5 +39,6 @@ jobs:
         if: steps.changed-workflow-files.outputs.any_changed == 'true'
         uses: zizmorcore/zizmor-action@5ca5fc7a4779c5263a3ffa0e1f693009994446d1 # v0.1.2
         with:
-          advanced-security: ${{ github.event.repository.private == false }}
+          #advanced-security: ${{ github.event.repository.private == false }}
+          advanced-security: false
           inputs: ${{ steps.changed-workflow-files.outputs.all_changed_files }}
