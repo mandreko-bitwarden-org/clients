@@ -46,6 +46,7 @@ jobs:
           npm --version
 
       - name: Install Node dependencies
+        id: install-node-deps
         run: npm ci
 
       # We use isolatedModules: true which disables typechecking in tests
