@@ -63,7 +63,7 @@ jobs:
           --fail \
           --create-dirs \
           --output .github/zizmor.yml \
-          https://raw.githubusercontent.com/bitwarden/workflow-linter/refs/heads/main/.github/zizmor.yml
+          https://raw.githubusercontent.com/bitwarden/workflow-linter/refs/heads/main/zizmor.yml
 
       - name: Set up Python 3.13
         if: steps.changed-workflows.outputs.changed_files_count != '0'
