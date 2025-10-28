@@ -80,5 +80,5 @@ jobs:
           files: ${{ steps.changed-workflows.outputs.changed_files }}
         if: steps.changed-workflows.outputs.changed_files_count != '0'
         run: |
-          echo "$files"
-          bwwl lint -f "$files"
+          echo "$files" >> "$GITHUB_STEP_SUMMARY"
+          bwwl lint -f "$files" >> "$GITHUB_STEP_SUMMARY"
