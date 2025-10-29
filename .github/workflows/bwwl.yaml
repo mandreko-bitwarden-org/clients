@@ -78,7 +78,8 @@ jobs:
       - name: Lint
         env:
           #files: ${{ steps.changed-workflows.outputs.changed_files }}
-          files: ".github/workflows"
+          #files: ".github/workflows"
+          files: ".github/workflows/alert-ddg-files-modified.yml"
         #if: steps.changed-workflows.outputs.changed_files_count != '0'
         run: |
           echo "$files"
