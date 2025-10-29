@@ -24,31 +24,31 @@ jobs:
           fetch-depth: ${{ github.event_name == 'pull_request' && 2 || 0 }}
           persist-credentials: false
 
-      - name: Check changed files for workflow changes
-        id: changed-workflows
-        run: |
-          if ${{ github.event_name == 'pull_request' }}; then
-            changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)
-          else
-            changed_files=$(git diff --name-only "${{ github.event.before }}" "${{ github.event.after }}" | xargs)
-          fi
+      # - name: Check changed files for workflow changes
+      #   id: changed-workflows
+      #   run: |
+      #     if ${{ github.event_name == 'pull_request' }}; then
+      #       changed_files=$(git diff --name-only -r HEAD^1 HEAD | xargs)
+      #     else
+      #       changed_files=$(git diff --name-only "${{ github.event.before }}" "${{ github.event.after }}" | xargs)
+      #     fi
 
-          count=$(( 0 ))
-          files_to_lint=""
-          for file in $changed_files; do
-            if [[ "$file" == ".github/workflows/"* ]]; then
-              count=$((count + 1 ))
-              files_to_lint="$files_to_lint $file"
-            fi
-          done
+      #     count=$(( 0 ))
+      #     files_to_lint=""
+      #     for file in $changed_files; do
+      #       if [[ "$file" == ".github/workflows/"* ]]; then
+      #         count=$((count + 1 ))
+      #         files_to_lint="$files_to_lint $file"
+      #       fi
+      #     done
 
-          echo "Workflow files changed: $count"
-          echo "Files to lint: $files_to_lint"
-          echo "changed_files=$files_to_lint" >> "$GITHUB_OUTPUT"
-          echo "changed_files_count=$count" >> "$GITHUB_OUTPUT"
+      #     echo "Workflow files changed: $count"
+      #     echo "Files to lint: $files_to_lint"
+      #     echo "changed_files=$files_to_lint" >> "$GITHUB_OUTPUT"
+      #     echo "changed_files_count=$count" >> "$GITHUB_OUTPUT"
 
       - name: Download actionlint configuration
-        if: steps.changed-workflows.outputs.changed_files_count != '0'
+        #if: steps.changed-workflows.outputs.changed_files_count != '0'
         run: |
           curl \
           --fail \
@@ -57,7 +57,7 @@ jobs:
           https://raw.githubusercontent.com/bitwarden/workflow-linter/refs/heads/main/.github/actionlint.yml
 
       - name: Download zizmor configuration
-        if: steps.changed-workflows.outputs.changed_files_count != '0'
+        #if: steps.changed-workflows.outputs.changed_files_count != '0'
         run: |
           curl \
           --fail \
@@ -66,19 +66,20 @@ jobs:
           https://raw.githubusercontent.com/bitwarden/workflow-linter/refs/heads/main/zizmor.yml
 
       - name: Set up Python 3.13
-        if: steps.changed-workflows.outputs.changed_files_count != '0'
+        #if: steps.changed-workflows.outputs.changed_files_count != '0'
         uses: actions/setup-python@e797f83bcb11b83ae66e0230d6156d7c80228e7c # v6.0.0
         with:
           python-version: "3.13.7"
 
       - name: Install bwwl binary
-        if: steps.changed-workflows.outputs.changed_files_count != '0'
+        #if: steps.changed-workflows.outputs.changed_files_count != '0'
         run: python -m pip install --upgrade bitwarden_workflow_linter
 
       - name: Lint
         env:
-          files: ${{ steps.changed-workflows.outputs.changed_files }}
-        if: steps.changed-workflows.outputs.changed_files_count != '0'
+          #files: ${{ steps.changed-workflows.outputs.changed_files }}
+          files: ".github/workflows"
+        #if: steps.changed-workflows.outputs.changed_files_count != '0'
         run: |
-          echo "$files" >> "$GITHUB_STEP_SUMMARY"
-          bwwl lint -f "$files" >> "$GITHUB_STEP_SUMMARY"
+          echo "$files"
+          bwwl lint -f "$files"
